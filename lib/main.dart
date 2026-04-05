@@ -11,29 +11,19 @@ class OmniDexApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'OmniDex',
       debugShowCheckedModeBanner: false,
+      title: 'OmniDex',
       theme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF0D1117),
-        primaryColor: const Color(0xFF0A84FF),
+        scaffoldBackgroundColor: Colors.black,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0A84FF),
+          seedColor: const Color(0xFF00FF88),
           brightness: Brightness.dark,
         ),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF111827),
+          backgroundColor: Colors.black,
           elevation: 0,
           centerTitle: true,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: const Color(0xFF1F2937),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-          hintStyle: const TextStyle(color: Colors.white54),
         ),
       ),
       home: const LoginPage(),
