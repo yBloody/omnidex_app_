@@ -1,5 +1,5 @@
 name: omnidex_app
-description: "Aplicativo mobile inspirado em loja de tecnologia (OmniDex)"
+description: OmniDex Gamer Store
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -12,15 +12,19 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  http: ^1.2.1
+  sqflite: ^2.3.3
+  sqflite_common_ffi: ^2.3.3
+  path: ^1.9.0
+  shared_preferences: ^2.2.3
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^6.0.0
 
 flutter:
-
   uses-material-design: true
 
   assets:

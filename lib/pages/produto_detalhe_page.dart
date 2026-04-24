@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/produto.dart';
+import '../controllers/carrinho_controller.dart';
+import 'package:intl/intl.dart';
+
 
 class ProdutoDetalhePage extends StatelessWidget {
   final Produto produto;
@@ -8,18 +11,23 @@ class ProdutoDetalhePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formato = NumberFormat.currency(
+      locale: 'pt_BR',
+      symbol: 'R\$',);
     return Scaffold(
       appBar: AppBar(
-        title: Text(produto.nome),
+        title: Text(
+          produto.nome,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
       body: Container(
         width: double.infinity,
+        height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Colors.black,
-              Color(0xFF001A0F),
-            ],
+            colors: [Colors.black, Color(0xFF001A0F)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -29,14 +37,16 @@ class ProdutoDetalhePage extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 20),
+
               Container(
                 width: double.infinity,
-                height: 220,
+                height: 240,
+                padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   color: const Color(0xFF0A0A0A),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: const Color(0xFF00FF88).withOpacity(0.35),
+                    color: const Color(0xFF00FF88).withOpacity(0.4),
                   ),
                   boxShadow: const [
                     BoxShadow(
@@ -46,18 +56,26 @@ class ProdutoDetalhePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Icon(
-                  produto.icone,
-                  size: 110,
-                  color: const Color(0xFF00FF88),
+                child: Image.network(
+                  produto.imagem,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(
+                      produto.icone,
+                      size: 110,
+                      color: const Color(0xFF00FF88),
+                    );
+                  },
                 ),
               ),
+
               const SizedBox(height: 24),
+
               Text(
                 produto.nome,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 28,
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF66FFB8),
                   shadows: [
@@ -68,7 +86,9 @@ class ProdutoDetalhePage extends StatelessWidget {
                   ],
                 ),
               ),
+
               const SizedBox(height: 10),
+
               Text(
                 produto.categoria,
                 style: const TextStyle(
@@ -76,7 +96,9 @@ class ProdutoDetalhePage extends StatelessWidget {
                   color: Colors.white70,
                 ),
               ),
+
               const SizedBox(height: 24),
+
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(18),
@@ -94,23 +116,36 @@ class ProdutoDetalhePage extends StatelessWidget {
                   ),
                 ),
               ),
+
               const SizedBox(height: 24),
+
               Text(
-                'R\$ ${produto.preco.toStringAsFixed(2)}',
+                formato.format(produto.preco),
                 style: const TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF00FF88),
                 ),
               ),
+
               const SizedBox(height: 30),
+
               SizedBox(
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton.icon(
-                  onPressed: () {
+                  onPressed: () async {
+                    await CarrinhoController.adicionar(produto);
+
+                    if (!context.mounted) return;
+
+                    ScaffoldMessenger.of(context).clearSnackBars();
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
+                        duration: const Duration(seconds: 1),
+                        behavior: SnackBarBehavior.floating,
+                        margin: const EdgeInsets.all(16),
                         backgroundColor: const Color(0xFF00FF88),
                         content: Text(
                           '${produto.nome} adicionado ao carrinho',
