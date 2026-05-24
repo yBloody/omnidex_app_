@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../data/database_helper.dart';
 import 'package:intl/intl.dart';
 
+import '../data/database_helper.dart';
+import 'finalizar_compra_page.dart';
 
 class CarrinhoPage extends StatefulWidget {
   const CarrinhoPage({super.key});
@@ -12,8 +13,10 @@ class CarrinhoPage extends StatefulWidget {
 
 class _CarrinhoPageState extends State<CarrinhoPage> {
   final formato = NumberFormat.currency(
-  locale: 'pt_BR',
-  symbol: 'R\$',);
+    locale: 'pt_BR',
+    symbol: 'R\$',
+  );
+
   List<Map<String, dynamic>> itens = [];
 
   @override
@@ -24,6 +27,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
 
   Future<void> carregar() async {
     final dados = await DatabaseHelper.getCarrinho();
+
     setState(() {
       itens = dados;
     });
@@ -57,6 +61,18 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
   Future<void> limpar() async {
     await DatabaseHelper.limparCarrinho();
     await carregar();
+  }
+
+  void irParaFinalizarCompra() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => FinalizarCompraPage(
+          itens: itens,
+          total: total,
+        ),
+      ),
+    ).then((_) => carregar());
   }
 
   @override
@@ -119,11 +135,20 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                                     width: 55,
                                     height: 55,
                                     fit: BoxFit.contain,
+                                    errorBuilder: (_, __, ___) {
+                                      return Container(
+                                        width: 55,
+                                        height: 55,
+                                        color: const Color(0xFF00FF88),
+                                        child: const Icon(
+                                          Icons.memory,
+                                          color: Colors.black,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
-
                                 const SizedBox(width: 12),
-
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -145,7 +170,6 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                                     ],
                                   ),
                                 ),
-
                                 Row(
                                   children: [
                                     IconButton(
@@ -171,7 +195,6 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                                     ),
                                   ],
                                 ),
-
                                 IconButton(
                                   icon: const Icon(
                                     Icons.close,
@@ -186,7 +209,6 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                       },
                     ),
                   ),
-
                   Container(
                     padding: const EdgeInsets.all(18),
                     decoration: const BoxDecoration(
@@ -225,7 +247,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                           width: double.infinity,
                           height: 52,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: irParaFinalizarCompra,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF00FF88),
                               foregroundColor: Colors.black,
